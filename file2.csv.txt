@@ -1,0 +1,4 @@
+,first,second,third,fouth
+1,1,2,3,128
+2,1,2,3,2
+33 , = first1 + first 2, = second1 - second2, = third1 * third2, = fouth1 / fouth2
