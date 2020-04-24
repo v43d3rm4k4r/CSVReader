@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
         if(ch == '\n')
             first_row_ended = true;
 
-        if(ch == ',')
+        if(ch == ',' || ch == ';')
         {
             ++global_comma_count;
             if(!first_row_ended)
@@ -79,9 +79,9 @@ int main(int argc, char* argv[])
     {
         if(ch == ' ')
             continue;
-        if(ch != ',' && ch != '\n')
+        if(ch != ',' && ch != '\n' && ch != ';')
             Vector[i][j] += ch;
-        if(ch == ',')
+        if(ch == ',' || ch == ';')
             ++j;
         if(ch == '\n')
         {
