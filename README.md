@@ -7,6 +7,7 @@ The cells of the CSV file can store either integers or expressions of the form
 = ARG1 OP ARG2  
 where ARG1 and ARG2 are the addresses of cells in the format ColumnName Line_Number, and OP is the arithmetic operation from the list: +, -, *, /
 
+- the first cell must always be empty;
 - running the program from the command line interpreter, you can specify a parameter in the form of a file name to open;
 - if the correct operator is not found inside the expression, the program exit by indicating the coordinates of the cell with the error;
 - column names cannot contain numbers, and row names cannot contain letters;
