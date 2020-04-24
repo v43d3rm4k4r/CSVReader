@@ -10,4 +10,4 @@ where ARG1 and ARG2 are the addresses of cells in the format ColumnName Line_Num
 - running the program from the command line interpreter, you can specify a parameter in the form of a file name to open;
 - if the correct operator is not found inside the expression, the program exit by indicating the coordinates of the cell with the error;
 - column names cannot contain numbers, and row names cannot contain letters;
-- line names do not have to be in order
+- row names do not have to be in order
