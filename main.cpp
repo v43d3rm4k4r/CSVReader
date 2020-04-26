@@ -151,7 +151,7 @@ string Calculate(const string& str, const vector<vector<string>>& Vector)
 
     char cStr[str.size()+1];
 
-    std::memcpy(cStr, str.c_str(), sizeof(cStr));
+    memcpy(cStr, str.c_str(), sizeof(cStr));
 
     // find operator
     op = strpbrk(cStr, ops);
@@ -183,7 +183,7 @@ string Calculate(const string& str, const vector<vector<string>>& Vector)
     for (size_t i = 0; i < ARG1.size(); ++i)
     {
         // until we come across numbers, we add
-        if (!std::isdigit(ARG1[i]))
+        if (!isdigit(ARG1[i]))
             ARG1_col_name += ARG1[i];
         // write the rest in row
         else
@@ -194,7 +194,7 @@ string Calculate(const string& str, const vector<vector<string>>& Vector)
     for (size_t i = 0; i < ARG2.size(); ++i)
     {
         // the rest until we come across numbers, we add
-        if(!std::isdigit(ARG2[i]))
+        if (!isdigit(ARG2[i]))
             ARG2_col_name += ARG2[i];
         // write the rest in row
         else
@@ -285,13 +285,9 @@ string Calculate(const string& str, const vector<vector<string>>& Vector)
     cout << "operator "<< *op << endl << endl;
 #endif
 
-    char cResult[10];
-    itoa(result, cResult, 10);
-    string strResult(cResult);
-
 #ifdef DEBUG
     cout << "strResult = " << strResult << endl;
 #endif
 
-    return strResult;
+    return string(std::to_string(result));
 }
