@@ -17,7 +17,7 @@ size_t columns = 1;
 size_t rows = 0;
 char ops[] = "+-*/";
 
-string& Calculate(const string& str, const vector< vector<string> >& Vector);
+string& Calculate(const string&& str, const vector< vector<string> >& Vector);
 
 int main(int argc, char* argv[])
 {
@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
         {
             if(Vector[i][j][0] == '=')
             {
-                Vector[i][j] = Calculate(Vector[i][j], Vector);
+                Vector[i][j] = Calculate(std::move(Vector[i][j]), Vector);
             }
         }
     }
@@ -149,7 +149,7 @@ int main(int argc, char* argv[])
     return 0;
 }
 //==============================================================================
-string& Calculate(const string& str, const vector< vector<string> >& Vector)
+string& Calculate(const string&& str, const vector< vector<string> >& Vector)
 {
     char* op = nullptr;
 
