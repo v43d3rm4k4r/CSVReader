@@ -17,7 +17,7 @@ size_t columns = 1;
 size_t rows = 0;
 char ops[] = "+-*/";
 
-string& Calculate(const string&& str, const vector< vector<string> >& Vector);
+string Calculate(const string&& str, const vector< vector<string> >& Vector);
 
 int main(int argc, char* argv[])
 {
@@ -38,7 +38,6 @@ int main(int argc, char* argv[])
     // find out the size of the desired vector
     bool first_row_ended = false;
     size_t global_comma_count = 0;
-    size_t first_row_comma_count = 0;
     char ch = 0;
     while((ch = getc(file)) != EOF)
     {
@@ -48,14 +47,12 @@ int main(int argc, char* argv[])
         if(ch == ',' || ch == ';')
         {
             ++global_comma_count;
+
             if(!first_row_ended)
-            {
                 ++columns;
-                ++first_row_comma_count;
-            }
         }
     }
-    rows = (global_comma_count+columns) / (first_row_comma_count+1);
+    rows = (global_comma_count+columns) / columns;
 
     // initializing the desired vector
     vector< vector<string> > Vector(rows);
@@ -101,7 +98,6 @@ int main(int argc, char* argv[])
                 fprintf(stderr, "\nError, no valid operator found in (row=%d,col=%d) cell.\n", i, j);
                 system("pause");
                 exit(EXIT_FAILURE);
-
             }
         }
     }
@@ -149,7 +145,7 @@ int main(int argc, char* argv[])
     return 0;
 }
 //==============================================================================
-string& Calculate(const string&& str, const vector< vector<string> >& Vector)
+string Calculate(const string&& str, const vector< vector<string> >& Vector)
 {
     char* op = nullptr;
 
