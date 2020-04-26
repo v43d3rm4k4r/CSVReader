@@ -17,15 +17,15 @@ size_t columns = 1;
 size_t rows = 0;
 char ops[] = "+-*/";
 
-string Calculate(const string&& str, const vector< vector<string> >& Vector);
+string Calculate(const string& str, const vector<vector<string>>& Vector);
 
 int main(int argc, char* argv[])
 {
-    if(argc != 2)
+    if (argc != 2)
         argv[1] = (char*)DEFAULT_CSV_FILE;
 
     FILE* file = fopen(argv[1], "r");
-    if(!file)
+    if (!file)
     {
         fprintf(stderr, "Cannot open the file \"%s\".\n", argv[1]);
         exit(EXIT_FAILURE);
@@ -39,12 +39,12 @@ int main(int argc, char* argv[])
     bool first_row_ended = false;
     size_t global_comma_count = 0;
     char ch = 0;
-    while((ch = getc(file)) != EOF)
+    while ((ch = getc(file)) != EOF)
     {
-        if(ch == '\n')
+        if (ch == '\n')
             first_row_ended = true;
 
-        if(ch == ',' || ch == ';')
+        if (ch == ',' || ch == ';')
         {
             ++global_comma_count;
 
@@ -55,8 +55,8 @@ int main(int argc, char* argv[])
     rows = (global_comma_count+columns) / columns;
 
     // initializing the desired vector
-    vector< vector<string> > Vector(rows);
-    for(size_t i = 0; i < rows; ++i)
+    vector<vector<string>> Vector(rows);
+    for (size_t i = 0; i < rows; ++i)
     {
         Vector[i].resize(columns);
     }
@@ -72,15 +72,15 @@ int main(int argc, char* argv[])
     // filter input
     size_t i = 0; // rows
     size_t j = 0; // columns
-    while((ch = getc(file)) != EOF)
+    while ((ch = getc(file)) != EOF)
     {
-        if(ch == ' ')
+        if (ch == ' ')
             continue;
-        if(ch != ',' && ch != '\n' && ch != ';')
+        if (ch != ',' && ch != '\n' && ch != ';')
             Vector[i][j] += ch;
-        if(ch == ',' || ch == ';')
+        if (ch == ',' || ch == ';')
             ++j;
-        if(ch == '\n')
+        if (ch == '\n')
         {
             ++i;
             j = 0;
@@ -89,11 +89,11 @@ int main(int argc, char* argv[])
 
     // if some cell has '=', but there are no valid operators, exit the program
     // and show invalid cell
-    for(size_t i = 0; i < rows; ++i)
+    for (size_t i = 0; i < rows; ++i)
     {
-        for(size_t j = 0; j < columns; ++j)
+        for (size_t j = 0; j < columns; ++j)
         {
-            if(Vector[i][j][0] == '=' && !strpbrk(Vector[i][j].c_str(), ops))
+            if (Vector[i][j][0] == '=' && !strpbrk(Vector[i][j].c_str(), ops))
             {
                 fprintf(stderr, "\nError, no valid operator found in (row=%d,col=%d) cell.\n", i, j);
                 system("pause");
@@ -103,11 +103,11 @@ int main(int argc, char* argv[])
     }
 
     cout << endl << "INPUT:" << endl << endl;
-    for(size_t i = 0; i < rows; ++i)
+    for (size_t i = 0; i < rows; ++i)
     {
-        for(size_t j = 0; j < columns; ++j)
+        for (size_t j = 0; j < columns; ++j)
         {
-            if(j != columns-1)
+            if (j != columns-1)
                 cout << Vector[i][j] << ",";
             else
                 cout << Vector[i][j];
@@ -116,24 +116,24 @@ int main(int argc, char* argv[])
     }
 
     // calculate the cells if needed
-    for(size_t i = 0; i < rows; ++i)
+    for (size_t i = 0; i < rows; ++i)
     {
-        for(size_t j = 0; j < columns; ++j)
+        for (size_t j = 0; j < columns; ++j)
         {
-            if(Vector[i][j][0] == '=')
+            if (Vector[i][j][0] == '=')
             {
-                Vector[i][j] = Calculate(std::move(Vector[i][j]), Vector);
+                Vector[i][j] = Calculate(Vector[i][j], Vector);
             }
         }
     }
 
     cout << endl;
     cout << "OUTPUT:" << endl << endl;
-    for(size_t i = 0; i < rows; ++i)
+    for (size_t i = 0; i < rows; ++i)
     {
-        for(size_t j = 0; j < columns; ++j)
+        for (size_t j = 0; j < columns; ++j)
         {
-            if(j != columns-1)
+            if (j != columns-1)
                 cout << Vector[i][j] << ",";
             else
                 cout << Vector[i][j];
@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
     return 0;
 }
 //==============================================================================
-string Calculate(const string&& str, const vector< vector<string> >& Vector)
+string Calculate(const string& str, const vector<vector<string>>& Vector)
 {
     char* op = nullptr;
 
@@ -159,7 +159,7 @@ string Calculate(const string&& str, const vector< vector<string> >& Vector)
     // divide the remaining line by ARG1 and ARG2
     size_t i = 1; // to ignore '='
     string ARG1, ARG2;
-    while(str[i] != *op)
+    while (str[i] != *op)
     {
         ARG1 += str[i];
         ++i;
@@ -167,7 +167,7 @@ string Calculate(const string&& str, const vector< vector<string> >& Vector)
 
     i = ARG1.size()+2;
 
-    while(str[i])
+    while (str[i])
     {
        ARG2 += str[i];
        ++i;
@@ -180,10 +180,10 @@ string Calculate(const string&& str, const vector< vector<string> >& Vector)
     string ARG2_row_name; // 30
     string ARG2_col_name; // Cell
 
-    for(size_t i = 0; i < ARG1.size(); ++i)
+    for (size_t i = 0; i < ARG1.size(); ++i)
     {
         // until we come across numbers, we add
-        if(!std::isdigit(ARG1[i]))
+        if (!std::isdigit(ARG1[i]))
             ARG1_col_name += ARG1[i];
         // write the rest in row
         else
@@ -191,7 +191,7 @@ string Calculate(const string&& str, const vector< vector<string> >& Vector)
             ARG1_row_name += ARG1[i];
         }
     }
-    for(size_t i = 0; i < ARG2.size(); ++i)
+    for (size_t i = 0; i < ARG2.size(); ++i)
     {
         // the rest until we come across numbers, we add
         if(!std::isdigit(ARG2[i]))
@@ -204,39 +204,39 @@ string Calculate(const string&& str, const vector< vector<string> >& Vector)
     }
 
     // find cells by indexes
-    int ARG1_row_index = 0;
-    int ARG1_col_index = 0;
+    size_t ARG1_row_index = 0;
+    size_t ARG1_col_index = 0;
 
-    int ARG2_row_index = 0;
-    int ARG2_col_index = 0;
+    size_t ARG2_row_index = 0;
+    size_t ARG2_col_index = 0;
 
-    for(size_t i = 1; i < rows; ++i)
+    for (size_t i = 1; i < rows; ++i)
     {
-        if(ARG1_row_name == Vector[i][0])
+        if (ARG1_row_name == Vector[i][0])
         {
             ARG1_row_index = i;
             break;
         }
     }
-    for(size_t j = 0; j < columns; ++j)
+    for (size_t j = 0; j < columns; ++j)
     {
-        if(ARG1_col_name == Vector[0][j])
+        if (ARG1_col_name == Vector[0][j])
         {
             ARG1_col_index = j;
             break;
         }
     }
-    for(size_t i = 1; i < rows; ++i)
+    for (size_t i = 1; i < rows; ++i)
     {
-        if(ARG2_row_name == Vector[i][0])
+        if (ARG2_row_name == Vector[i][0])
         {
             ARG2_row_index = i;
             break;
         }
     }
-    for(size_t j = 0; j < columns; ++j)
+    for (size_t j = 0; j < columns; ++j)
     {
-        if(ARG2_col_name == Vector[0][j])
+        if (ARG2_col_name == Vector[0][j])
         {
             ARG2_col_index = j;
             break;
