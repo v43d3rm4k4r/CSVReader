@@ -6,8 +6,6 @@
 
 #define DEFAULT_CSV_FILE "file2.csv.txt"
 
-//#define DEBUG
-
 using std::vector;
 using std::string;
 using std::cout;
@@ -60,12 +58,6 @@ int main(int argc, char* argv[])
     {
         Vector[i].resize(columns);
     }
-
-#ifdef DEBUG
-    printf("columns = %d\n", columns);
-    printf("rows = %d\n", rows);
-    cout << endl;
-#endif
 
     rewind(file);
 
@@ -266,28 +258,6 @@ string Calculate(const string& str, const vector<vector<string>>& Vector)
     default:
         break;
     }
-
-#ifdef DEBUG
-    cout << endl << endl;
-    cout << "input str = " <<str << endl << endl;
-    cout << "result = "<< result << endl;
-    cout << endl;
-    cout << "ARG1_col_name =" << ARG1_col_name << endl;
-    cout << "ARG1_row_name =" << ARG1_row_name << endl;
-    cout << "ARG2_col_name =" << ARG2_col_name << endl;
-    cout << "ARG2_row_name =" << ARG2_row_name << endl;
-    cout << endl;
-    cout << "str = " << ARG1 + *op + ARG2 << endl;
-    static int call_count = 1;
-    cout << endl;
-    cout << call_count <<" Calculate call" << std::endl;
-    ++call_count;
-    cout << "operator "<< *op << endl << endl;
-#endif
-
-#ifdef DEBUG
-    cout << "strResult = " << strResult << endl;
-#endif
 
     return string(std::to_string(result));
 }
