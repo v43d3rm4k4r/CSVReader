@@ -16,14 +16,11 @@ uint16_t rows = 0;
 
 const char ops[] = "+-*/";
 
-string calculate(const string& str, const vector<vector<string>>& Vector);
+string calculate(const string& str, const vector<vector<string>>& field);
 
 int main(int argc, char* argv[])
 {
-    if (argc < 2)
-        strcpy(argv[1], DEFAULT_CSV_FILE);
-
-    FILE* file = fopen(argv[1], "r");
+    FILE* file = fopen(argc < 2 ? DEFAULT_CSV_FILE : argv[1], "r");
     if (!file)
     {
         fprintf(stderr, "Cannot open the file \"%s\".\n", argv[1]);
