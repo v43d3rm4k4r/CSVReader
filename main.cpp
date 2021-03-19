@@ -1,26 +1,27 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <cstdlib> // for atoi() and itoa()
+#include <cstdlib>
 #include <cstring>
 
-#define DEFAULT_CSV_FILE "file2.csv.txt"
+#define DEFAULT_CSV_FILE "../Examples/example2.txt"
 
 using std::vector;
 using std::string;
 using std::cout;
 using std::endl;
 
-size_t columns = 1;
-size_t rows = 0;
-char ops[] = "+-*/";
+uint16_t columns = 1;
+uint16_t rows = 0;
 
-string Calculate(const string& str, const vector<vector<string>>& Vector);
+const char ops[] = "+-*/";
+
+string calculate(const string& str, const vector<vector<string>>& Vector);
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2)
-        argv[1] = (char*)DEFAULT_CSV_FILE;
+    if (argc < 2)
+        strcpy(argv[1], DEFAULT_CSV_FILE);
 
     FILE* file = fopen(argv[1], "r");
     if (!file)
@@ -35,7 +36,7 @@ int main(int argc, char* argv[])
 
     // find out the size of the desired vector
     bool first_row_ended = false;
-    size_t global_comma_count = 0;
+    uint16_t global_comma_count = 0;
     char ch = 0;
     while ((ch = getc(file)) != EOF)
     {
@@ -53,23 +54,23 @@ int main(int argc, char* argv[])
     rows = (global_comma_count+columns) / columns;
 
     // initializing the desired vector
-    vector<vector<string>> Vector(rows);
-    for (size_t i = 0; i < rows; ++i)
+    vector<vector<string>> field(rows);
+    for (uint16_t i = 0; i < rows; ++i)
     {
-        Vector[i].resize(columns);
+        field[i].resize(columns);
     }
 
     rewind(file);
 
     // filter input
-    size_t i = 0; // rows
-    size_t j = 0; // columns
+    uint16_t i = 0; // rows
+    uint16_t j = 0; // columns
     while ((ch = getc(file)) != EOF)
     {
         if (ch == ' ')
             continue;
         if (ch != ',' && ch != '\n' && ch != ';')
-            Vector[i][j] += ch;
+            field[i][j] += ch;
         if (ch == ',' || ch == ';')
             ++j;
         if (ch == '\n')
@@ -81,11 +82,11 @@ int main(int argc, char* argv[])
 
     // if some cell has '=', but there are no valid operators, exit the program
     // and show invalid cell
-    for (size_t i = 0; i < rows; ++i)
+    for (uint16_t i = 0; i < rows; ++i)
     {
-        for (size_t j = 0; j < columns; ++j)
+        for (uint16_t j = 0; j < columns; ++j)
         {
-            if (Vector[i][j][0] == '=' && !strpbrk(Vector[i][j].c_str(), ops))
+            if (field[i][j][0] == '=' && !strpbrk(field[i][j].c_str(), ops))
             {
                 fprintf(stderr, "\nError, no valid operator found in (row=%d,col=%d) cell.\n", i, j);
                 system("pause");
@@ -95,40 +96,40 @@ int main(int argc, char* argv[])
     }
 
     cout << endl << "INPUT:" << endl << endl;
-    for (size_t i = 0; i < rows; ++i)
+    for (uint16_t i = 0; i < rows; ++i)
     {
-        for (size_t j = 0; j < columns; ++j)
+        for (uint16_t j = 0; j < columns; ++j)
         {
             if (j != columns-1)
-                cout << Vector[i][j] << ",";
+                cout << field[i][j] << ",";
             else
-                cout << Vector[i][j];
+                cout << field[i][j];
         }
         cout << endl;
     }
 
     // calculate the cells if needed
-    for (size_t i = 0; i < rows; ++i)
+    for (uint16_t i = 0; i < rows; ++i)
     {
-        for (size_t j = 0; j < columns; ++j)
+        for (uint16_t j = 0; j < columns; ++j)
         {
-            if (Vector[i][j][0] == '=')
+            if (field[i][j][0] == '=')
             {
-                Vector[i][j] = Calculate(Vector[i][j], Vector);
+                field[i][j] = calculate(field[i][j], field);
             }
         }
     }
 
     cout << endl;
     cout << "OUTPUT:" << endl << endl;
-    for (size_t i = 0; i < rows; ++i)
+    for (uint16_t i = 0; i < rows; ++i)
     {
-        for (size_t j = 0; j < columns; ++j)
+        for (uint16_t j = 0; j < columns; ++j)
         {
             if (j != columns-1)
-                cout << Vector[i][j] << ",";
+                cout << field[i][j] << ",";
             else
-                cout << Vector[i][j];
+                cout << field[i][j];
         }
         cout << endl;
     }
@@ -137,7 +138,7 @@ int main(int argc, char* argv[])
     return 0;
 }
 //==============================================================================
-string Calculate(const string& str, const vector<vector<string>>& Vector)
+string calculate(const string& str, const vector<vector<string>>& field)
 {
     char* op = nullptr;
 
@@ -149,7 +150,7 @@ string Calculate(const string& str, const vector<vector<string>>& Vector)
     op = strpbrk(cStr, ops);
 
     // divide the remaining line by ARG1 and ARG2
-    size_t i = 1; // to ignore '='
+    uint16_t i = 1; // to ignore '='
     string ARG1, ARG2;
     while (str[i] != *op)
     {
@@ -172,7 +173,7 @@ string Calculate(const string& str, const vector<vector<string>>& Vector)
     string ARG2_row_name; // 30
     string ARG2_col_name; // Cell
 
-    for (size_t i = 0; i < ARG1.size(); ++i)
+    for (uint16_t i = 0; i < ARG1.size(); ++i)
     {
         // until we come across numbers, we add
         if (!isdigit(ARG1[i]))
@@ -183,7 +184,7 @@ string Calculate(const string& str, const vector<vector<string>>& Vector)
             ARG1_row_name += ARG1[i];
         }
     }
-    for (size_t i = 0; i < ARG2.size(); ++i)
+    for (uint16_t i = 0; i < ARG2.size(); ++i)
     {
         // the rest until we come across numbers, we add
         if (!isdigit(ARG2[i]))
@@ -196,39 +197,39 @@ string Calculate(const string& str, const vector<vector<string>>& Vector)
     }
 
     // find cells by indexes
-    size_t ARG1_row_index = 0;
-    size_t ARG1_col_index = 0;
+    uint16_t ARG1_row_index = 0;
+    uint16_t ARG1_col_index = 0;
 
-    size_t ARG2_row_index = 0;
-    size_t ARG2_col_index = 0;
+    uint16_t ARG2_row_index = 0;
+    uint16_t ARG2_col_index = 0;
 
-    for (size_t i = 1; i < rows; ++i)
+    for (uint16_t i = 1; i < rows; ++i)
     {
-        if (ARG1_row_name == Vector[i][0])
+        if (ARG1_row_name == field[i][0])
         {
             ARG1_row_index = i;
             break;
         }
     }
-    for (size_t j = 0; j < columns; ++j)
+    for (uint16_t j = 0; j < columns; ++j)
     {
-        if (ARG1_col_name == Vector[0][j])
+        if (ARG1_col_name == field[0][j])
         {
             ARG1_col_index = j;
             break;
         }
     }
-    for (size_t i = 1; i < rows; ++i)
+    for (uint16_t i = 1; i < rows; ++i)
     {
-        if (ARG2_row_name == Vector[i][0])
+        if (ARG2_row_name == field[i][0])
         {
             ARG2_row_index = i;
             break;
         }
     }
-    for (size_t j = 0; j < columns; ++j)
+    for (uint16_t j = 0; j < columns; ++j)
     {
-        if (ARG2_col_name == Vector[0][j])
+        if (ARG2_col_name == field[0][j])
         {
             ARG2_col_index = j;
             break;
@@ -240,20 +241,20 @@ string Calculate(const string& str, const vector<vector<string>>& Vector)
     switch (*op)
     {
     case '+':
-        result = atoi(Vector[ARG1_row_index][ARG1_col_index].c_str()) +
-                 atoi(Vector[ARG2_row_index][ARG2_col_index].c_str());
+        result = atoi(field[ARG1_row_index][ARG1_col_index].c_str()) +
+                 atoi(field[ARG2_row_index][ARG2_col_index].c_str());
         break;
     case '-':
-        result = atoi(Vector[ARG1_row_index][ARG1_col_index].c_str()) -
-                 atoi(Vector[ARG2_row_index][ARG2_col_index].c_str());
+        result = atoi(field[ARG1_row_index][ARG1_col_index].c_str()) -
+                 atoi(field[ARG2_row_index][ARG2_col_index].c_str());
         break;
     case '*':
-        result = atoi(Vector[ARG1_row_index][ARG1_col_index].c_str()) *
-                 atoi(Vector[ARG2_row_index][ARG2_col_index].c_str());
+        result = atoi(field[ARG1_row_index][ARG1_col_index].c_str()) *
+                 atoi(field[ARG2_row_index][ARG2_col_index].c_str());
         break;
     case '/':
-        result = atoi(Vector[ARG1_row_index][ARG1_col_index].c_str()) /
-                 atoi(Vector[ARG2_row_index][ARG2_col_index].c_str());
+        result = atoi(field[ARG1_row_index][ARG1_col_index].c_str()) /
+                 atoi(field[ARG2_row_index][ARG2_col_index].c_str());
         break;
     default:
         break;
